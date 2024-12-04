@@ -1,0 +1,79 @@
+cabal-version:      3.0
+name:               AdventOfCode
+version:            0.1.0.0
+license:            NONE
+author:             Jianbo Liu
+maintainer:         liuchienpo@gmail.com
+build-type:         Simple
+extra-doc-files:    CHANGELOG.md
+common warnings
+    ghc-options: -Wall
+
+library
+    import:           warnings
+    exposed-modules:  Utils
+    build-depends:    base ^>=4.17.2.1
+    hs-source-dirs:   src
+    default-language: Haskell2010
+
+executable Download
+    import:           warnings
+    main-is:          Download.hs
+    build-depends:
+        base ^>=4.17.2.1,
+        http-conduit,
+        text,
+        bytestring,
+        directory,
+        containers,
+        http-client,
+        AdventOfCode,
+    hs-source-dirs:   app
+    default-language: Haskell2010
+
+executable day01
+    import:           warnings
+    main-is:          day01.hs
+    build-depends:
+        base ^>=4.17.2.1,
+        containers,
+        criterion,
+        AdventOfCode,
+    hs-source-dirs:   app
+    default-language: Haskell2010
+    ghc-options: -O2
+
+executable day02
+    import:           warnings
+    main-is:          day02.hs
+    build-depends:
+        base ^>=4.17.2.1,
+        criterion,
+        AdventOfCode,
+    hs-source-dirs:   app
+    default-language: Haskell2010
+    ghc-options: -O2
+
+executable day03
+    import:           warnings
+    main-is:          day03.hs
+    build-depends:
+        base ^>=4.17.2.1,
+        megaparsec,
+        replace-megaparsec,
+        criterion,
+        AdventOfCode,
+    hs-source-dirs:   app
+    default-language: Haskell2010
+    ghc-options: -O2
+
+executable day04
+    import:           warnings
+    main-is:          day04.hs
+    build-depends:
+        base ^>=4.17.2.1,
+        criterion,
+        AdventOfCode,
+    hs-source-dirs:   app
+    default-language: Haskell2010
+    ghc-options: -O2
