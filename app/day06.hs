@@ -5,22 +5,10 @@ import qualified Data.Set as Set
 import Utils (readInputLines)
 
 findInit :: [String] -> (Char, (Int, Int))
-findInit input =
-  head
-    [ (char, (r, c))
-    | (r, row) <- zip [0 ..] input
-    , (c, char) <- zip [0 ..] row
-    , char `elem` "^>v<"
-    ]
+findInit input = head [(char, (r, c)) | (r, row) <- zip [0 ..] input, (c, char) <- zip [0 ..] row, char `elem` "^>v<"]
 
 findObs :: [String] -> Set.Set (Int, Int)
-findObs input =
-  Set.fromList $
-    [ (r, c)
-    | (r, row) <- zip [0 ..] input
-    , (c, char) <- zip [0 ..] row
-    , char == '#'
-    ]
+findObs input = Set.fromList $ [(r, c) | (r, row) <- zip [0 ..] input, (c, char) <- zip [0 ..] row, char == '#']
 
 findNextPos :: Char -> (Int, Int) -> Set.Set (Int, Int) -> Maybe (Char, (Int, Int))
 findNextPos ch (r, c) obs =
@@ -34,41 +22,26 @@ findNextPos ch (r, c) obs =
   samer = Set.filter ((== r) . fst) obs
   samec = Set.filter ((== c) . snd) obs
 
-part1 :: [String] -> Int
-part1 input = Set.size $ go d p Set.empty
+route :: Int -> Int -> Char -> (Int, Int) -> Set.Set (Int, Int) -> Set.Set (Int, Int)
+route h w d p obs = go d p Set.empty
  where
-  obs = findObs input
-  (d, p) = findInit input
-  height = length input
-  width = length $ head input
+  path cp np = [(r, c) | r <- [min (fst cp) (fst np) .. max (fst cp) (fst np)], c <- [min (snd cp) (snd np) .. max (snd cp) (snd np)]]
   go cd cp acc = case findNextPos cd cp obs of
-    Just (nd, np) ->
-      go
-        nd
-        np
-        ( Set.union
-            ( Set.fromList
-                [ (r, c)
-                | r <- [min (fst cp) (fst np) .. max (fst cp) (fst np)]
-                , c <- [min (snd cp) (snd np) .. max (snd cp) (snd np)]
-                ]
-            )
-            acc
-        )
+    Just (nd, np) -> go nd np (Set.union (Set.fromList $ path cp np) acc)
     Nothing -> case cd of
       '^' -> Set.union (Set.fromList [(r, snd cp) | r <- [0 .. fst cp]]) acc
-      '>' -> Set.union (Set.fromList [(fst cp, c) | c <- [snd cp .. width - 1]]) acc
-      'v' -> Set.union (Set.fromList [(r, snd cp) | r <- [fst cp .. height - 1]]) acc
+      '>' -> Set.union (Set.fromList [(fst cp, c) | c <- [snd cp .. w - 1]]) acc
+      'v' -> Set.union (Set.fromList [(r, snd cp) | r <- [fst cp .. h - 1]]) acc
       '<' -> Set.union (Set.fromList [(fst cp, c) | c <- [0 .. snd cp]]) acc
       _ -> acc
 
-findDot :: [String] -> [(Int, Int)]
-findDot input =
-  [ (r, c)
-  | (r, row) <- zip [0 ..] input
-  , (c, char) <- zip [0 ..] row
-  , char == '.'
-  ]
+part1 :: [String] -> Int
+part1 input = Set.size $ route h w d p obs
+ where
+  obs = findObs input
+  (d, p) = findInit input
+  h = length input
+  w = length $ head input
 
 isLoop :: Char -> (Int, Int) -> Set.Set (Int, Int) -> (Int, Int) -> Bool
 isLoop d p obs new = go d p Set.empty
@@ -79,11 +52,12 @@ isLoop d p obs new = go d p Set.empty
     Nothing -> False
 
 part2 :: [String] -> Int
-part2 input = sum $ map (fromEnum . isLoop d p obs) dots
+part2 input = sum $ map (fromEnum . isLoop d p obs) (Set.toList $ route h w d p obs)
  where
   obs = findObs input
   (d, p) = findInit input
-  dots = findDot input
+  h = length input
+  w = length $ head input
 
 main :: IO ()
 main = do
