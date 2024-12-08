@@ -12,17 +12,15 @@ import Utils (readInputLines)
 
 mulparser :: Parsec Void String (Int, Int)
 mulparser = do
-  _ <- string "mul("
-  x1 <- decimal
-  _ <- char ','
-  x2 <- decimal
+  x1 <- string "mul(" >> decimal
+  x2 <- char ',' >> decimal
   _ <- char ')'
   return (x1, x2)
 
 part1 :: [String] -> Int
 part1 input = sum $ map (uncurry (*)) commands
-  where
-    commands = rights $ second snd <$> splitCap (match mulparser) (concat input)
+ where
+  commands = rights $ second snd <$> splitCap (match mulparser) (concat input)
 
 enparser :: Parsec Void String Bool
 enparser = do
@@ -35,14 +33,14 @@ enparser = do
 
 disgard :: String -> String
 disgard input = concat . lefts $ head xs : [xs !! (r + 1) | r <- [1, 3 .. length xs - 1], fromRight False (xs !! r)]
-  where
-    xs = second snd <$> splitCap (match enparser) input
+ where
+  xs = second snd <$> splitCap (match enparser) input
 
 part2 :: [String] -> Int
 part2 input = sum $ map (uncurry (*)) commands
-  where
-    mem = disgard $ unlines input
-    commands = rights $ second snd <$> splitCap (match mulparser) mem
+ where
+  mem = disgard $ unlines input
+  commands = rights $ second snd <$> splitCap (match mulparser) mem
 
 main :: IO ()
 main = do
