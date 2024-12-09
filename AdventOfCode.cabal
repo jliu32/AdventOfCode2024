@@ -123,8 +123,20 @@ executable day08
         base ^>=4.17.2.1,
         criterion,
         containers,
-        array,
         AdventOfCode,
     hs-source-dirs:   app
+    default-language: Haskell2010
+    ghc-options: -O2
+
+executable day09
+    import:           warnings
+    main-is:          day09.hs
+    build-depends:
+        base ^>=4.17.2.1,
+        criterion,
+        containers,
+        AdventOfCode,
+    hs-source-dirs:   app
+    ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wprepositive-qualified-module -Wredundant-constraints -O2 -threaded -rtsopts -with-rtsopts=-N
     default-language: Haskell2010
     ghc-options: -O2
