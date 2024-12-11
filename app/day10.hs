@@ -72,7 +72,7 @@ main = do
   print $ part2 input
   defaultMain
     [ bgroup
-        "Day 1"
+        "Day 10"
         [ bench "part 1" $ nf part1 input
         , bench "part 2" $ nf part2 input
         ]

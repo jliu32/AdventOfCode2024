@@ -1,7 +1,7 @@
 module Main where
 
 import Criterion.Main
-import Data.List
+import Data.List (partition, sort)
 import Utils (readInputLines)
 
 parseLine :: String -> ([[(Int, Int)]], Int, Int)
@@ -75,7 +75,7 @@ main = do
   print $ part2 input
   defaultMain
     [ bgroup
-        "Day 1"
+        "Day 09"
         [ bench "part 1" $ nf part1 input
         , bench "part 2" $ nf part2 input
         ]

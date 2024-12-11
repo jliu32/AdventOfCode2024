@@ -1,3 +1,4 @@
 dist-newstyle/
 session.txt
 data/
+.DS_Store
