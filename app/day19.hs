@@ -3,7 +3,6 @@ module Main where
 import Criterion.Main
 import Data.List (isPrefixOf)
 import Data.List.Split (splitOn)
-import qualified Data.Map as Map
 import Data.MemoTrie (memoFix)
 import Utils (readInputLines)
 
@@ -27,16 +26,7 @@ part1 input = sum . map fromEnum $ map (\line -> display pats line) designs
 allDisplay :: [String] -> String -> Int
 allDisplay patterns =
   memoFix
-    ( \f str ->
-        if null str
-          then 1
-          else
-            sum
-              [ f (drop (length p) str)
-              | p <- patterns
-              , p `isPrefixOf` str
-              ]
-    )
+    (\f str -> if null str then 1 else sum [f (drop (length p) str) | p <- patterns, p `isPrefixOf` str])
 
 part2 :: [String] -> Int
 part2 input = sum ways
